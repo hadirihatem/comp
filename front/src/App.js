@@ -26,6 +26,7 @@ function App() {
           <PrivetRoute exact path="/feed" component={Feed} />
           <PrivetRoute exact path="/Groupe" component={Groupe}/>
            <PrivetRoute exact path="/Post" component={Postnew}/>
+        
 
         </switch>
       </Router>

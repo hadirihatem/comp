@@ -1,11 +1,11 @@
 import {
-  AADCOMMENT_SUCCESS,
-  AADCOOMENT_FAIL,
+  ADDCOMMENT_SUCCESS,
+  ADDCOOMENT_FAIL,
   ADDPOST_FAIL,
   GETPOSTS,
   GET_POST,
-  AADLIKE_SUCCESS,
-  AADLIKE_FAIL,
+  ADDLIKE_SUCCESS,
+  ADDLIKE_FAIL,
   MOST_LIKED_POST,
   LIKEPOST_ERROR,
   GETBYDATE,
@@ -61,39 +61,39 @@ export const addPost = (data) => (dispatch) => {
 
 //------------aadcomment------------------
 
-export const aadcomment = (postId, data) => (dispatch) => {
+export const addcomment = (postId, data) => (dispatch) => {
   axios
     .put("http://localhost:4000/comment/:postId ", data)
     .then((res) => {
       return dispatch({
-        type: AADCOMMENT_SUCCESS,
+        type: ADDCOMMENT_SUCCESS,
         payload: res.data,
       });
       dispatch(getpost(postId));
     })
     .catch((err) =>
       dispatch({
-        type: AADCOOMENT_FAIL,
+        type: ADDCOOMENT_FAIL,
         payload: err.response.data.msg,
       })
     );
 };
 
-//----------aadliketopost---------------------
+//----------addliketopost---------------------
 
-export const aadliketopost = (postId) => (dispatch) => {
+export const addliketopost = (postId) => (dispatch) => {
   axios
     .put(`http://localhost:4000/postlike/${postId}`)
     .then((res) => {
       return dispatch({
-        type: AADLIKE_SUCCESS,
+        type: ADDLIKE_SUCCESS,
         payload: res.data,
       });
       dispatch(getpost(postId));
     })
     .catch((err) =>
       dispatch({
-        type: AADLIKE_FAIL,
+        type: ADDLIKE_FAIL,
         payload: err.response.data.msg,
       })
     );

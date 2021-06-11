@@ -2,91 +2,87 @@ const Post = require("../models/Post");
 const User = require("../models/User");
 const { validationResult } = require("express-validator");
 
+
+
+const { uploadErrors } = require("../utils/errors.utils");
+const fs = require("fs");
+const { promisify } = require("util");
+const pipeline = promisify(require("stream").pipeline);
+
+
+
+exports.insert = async (req, res) => {
+  let fileName;
+
+  if (req.file !== null) {
+    try {
+      if (
+        req.file.detectedMimeType != "image/jpg" &&
+        req.file.detectedMimeType != "image/png" &&
+        req.file.detectedMimeType != "image/jpeg"
+      )
+        throw Error("invalid file");
+
+      if (req.file.size > 500000) throw Error("max size");
+    } catch (err) {
+      const errors = uploadErrors(err);
+      return res.status(201).json({ errors });
+    }
+    fileName = req.body.files + Date.now() + ".jpg";
+
+    await pipeline(
+      req.file.stream,
+      fs.createWriteStream(
+        `${__dirname}/../uploads${fileName}`
+      )
+    );
+  }
+
+  const newPost = new Post({
+    title: req.body.title,
+    discription: req.body.discription,
+    files: req.file !== null ? "./uploads" + fileName : "",
+    
+    likes: [],
+    comments: [],
+  });
+
+  try {
+    const post = await newPost.save();
+    return res.status(201).json(post);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+};
+
+//----------------------------------------------------------
 // exports.insert = (req, res) => {
-//   Post.createPost(req.body).then((posts) => {
-//     posts != undefined
-//       ? res.statut(201).send([{ msg: "post created" }])
-//       : res.status(400).send({ errors: [{ msg: "post not created" }] });
+//   Post.createPost(req.body).then((result) => {
+//     result != undefined
+//       ? res.status(201).send({
+//           code: 201,
+//           status: "success",
+//           message: "post created successfuly",
+//           data: result,
+//         })
+//       : res.status(400).send({
+//           code: 400,
+//           status: "error",
+//           message: "Invalid post object",
+//         });
+    
 //   });
 // };
-// exports.insert = (req, res) => {
-//     Post.createPost(req.body).then((posts) => {
-//       posts != undefined
-//         ? res.status(201).send([{
-//            msg : "post created"
-//           }])
-//         : res.status(400).send([{
-
-//             mesg: "error to create post",
-//           }]);
-
-//     });
-//   };
-
-//-----------------createpost---------------
-// exports.insert = (req, res) => {
-//   let newPost = new Post({ ...req.body, owner: req.userId });
-
-//   newPost
-//     .save()
-//     .then((post) => res.status(201).send(post))
-//     .catch((err) => {
-//       console.log(err.message);
-//       res.status(500).json({ msg: "Server Error" });
-//     });
-// };
-
-exports.insert = (req, res) => {
-  Post.createPost(req.body).then((result) => {
-    result != undefined
-      ? res.status(201).send({
-          code: 201,
-          status: "success",
-          message: "post created successfuly",
-          data: result,
-        })
-      : res.status(400).send({
-          code: 400,
-          status: "error",
-          message: "Invalid post object",
-        });
-    //{ id: result._id }
-  });
-};
-//--------------multer-----------------
-// exports.storage = multer.diskStorage ({
-//   destination: function (req, file ,cb){
-//     cb (null, 'upload/')
-//     },
-//     filefilter: (req,res,cb) => {
-//       const ext =path.extname(file.originalname)
-//       if (ext!== '.jpg' ){
-//         return cb (res.status(400).end('only jpg file is allowed'),false)
-//       }
-//       cb (null,true)
-//     }
-// })
-// var upload = multer({ storage: storage })
-
 
 
 //------------------getpost-------------
 
-// exports.getpost = (req, res) => {
-//   Post.findById()
-//     .then((posts) => res.send(posts))
-//     .catch((err) => {
-//       console.log(err.message);
-//       res.status(500).json({ msg: "Server Error" });
-//     });
-// };
+
 
 exports.getpost = (req, res) => {
   Post.findById(req.params.postId)
     .then((result) => {
-      res.status(200).json(
-       result
-      );
+      res.status(200).json(result);
     })
     .catch(() =>
       res.status(404).send("post not found, retry with a valid postId.")
@@ -123,17 +119,6 @@ exports.removeById = (req, res) => {
 
 //---------update-----------------
 
-// exports.putpost = (req, res) => {
-//   Post.putPost(req.params.postId, req.body)
-//   .then(() => {
-//     res.status(200).send({msg:"post updated"
-
-//     });
-//   })
-//   .catch(() =>
-//     res.status(404).send("post not found, retry with a valid postId.")
-//   );
-// };
 
 exports.putpost = (req, res) => {
   Post.putPost(req.params.postId, req.body)
@@ -170,38 +155,12 @@ exports.putlikepost = (req, res) => {
   };
 };
 
-// exports.likepost = async (req, res) => {
-//   try {
-//     let post = await Post.findById(req.params.post_id);
-
-//     if (!post) return res.status(404).json("Post not found");
-
-//     if (post.likes.find((like) => like.user.toString() === req.user.id))
-//       return res.status(401).json("Post is already liked by you!");
-
-//     let newLike = {
-//       user: req.user.id,
-//     };
-
-//     post.likes.unshift(newLike);
-
-//     await post.save();
-
-//     res.json(post);
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json("Server Error...");
-//   }
-// };
-
 
 
 //------mostlikedpost----------------------------
 
-
-exports.mostliked=async (req, res) => {
+exports.mostliked = async (req, res) => {
   try {
-    
     let posts = await Post.find().sort({ likes: -1 });
     res.json(posts);
   } catch (error) {
@@ -209,7 +168,6 @@ exports.mostliked=async (req, res) => {
     return res.status(500).json("Server Error...");
   }
 };
-
 
 //----------------------getlist----------------
 exports.list = (req, res) => {
@@ -227,7 +185,6 @@ exports.list = (req, res) => {
   });
 };
 
-
 //-----------------getpostbydate-------------
 exports.getpostbydate = async (req, res) => {
   try {
@@ -240,7 +197,6 @@ exports.getpostbydate = async (req, res) => {
 };
 
 //------------------------------comment------------------------------------------
-
 
 //--------addcomment----------------
 
@@ -274,11 +230,9 @@ exports.aadComment = async (req, res) => {
   }
 };
 
-
-
 //------getmostpostcommented-----------------------------
 
-exports.mostcommented=async (req, res) => {
+exports.mostcommented = async (req, res) => {
   try {
     let posts = await Post.find().sort({ comments: -1 });
     res.json(posts);
@@ -288,14 +242,9 @@ exports.mostcommented=async (req, res) => {
   }
 };
 
-
-
-
 //-----------removecomment--------------------------------
 
-
-
-exports.removecomment=async (req, res) => {
+exports.removecomment = async (req, res) => {
   try {
     let post = await Post.findById(req.params.post_id);
 
@@ -316,3 +265,39 @@ exports.removecomment=async (req, res) => {
   }
 };
 
+//-------------------------------------------------------------------
+// exports.multipleFileUpload = async (req, res, next) => {
+//   try{
+//     let filesList = req.files.map((file) =>(path = `${req.protocol}://${req.hostname}:4000/uploads/${file.filename}`)   )
+//       // let filesArray = [];
+//       // req.files.forEach(element => {
+//       //     const file = {
+//       //         fileName: element.originalname,
+//       //         filePath: element.path,
+//       //         fileType: element.mimetype,
+//       //         fileSize: fileSizeFormatter(element.size, 2)
+//       //     }
+//       //     filesArray.push(file);
+      
+//       const post = new Post({
+//           title: req.body.title,
+//           discription: req.body.discription,
+//           files: filesList 
+//       });
+//       await post.save();
+//       res.status(201).send('Files Uploaded Successfully');
+//   }catch(error) {
+//       res.status(400).send(error.message);
+//   }
+// }
+
+// const fileSizeFormatter = (bytes, decimal) => {
+//   if(bytes === 0){
+//       return '0 Bytes';
+//   }
+//   const dm = decimal || 2;
+//   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'YB', 'ZB'];
+//   const index = Math.floor(Math.log(bytes) / Math.log(1000));
+//   return parseFloat((bytes / Math.pow(1000, index)).toFixed(dm)) + ' ' + sizes[index];
+
+// }

@@ -57,7 +57,6 @@ const Profile = () => {
     if (auth.user)
     dispatch(getpost())
   }, [])
-
   return (
     <div>
       <Button variant="outline-info" onClick={openModal}>
@@ -82,7 +81,7 @@ const Profile = () => {
 
           <label style={{ marginRight: 10 }}>poster</label>
 
-          <input type="text" name="poster" onChange={handleChange} />
+          <input type="file" name="poster" onChange={handleChange} />
         </Form>
 
         <Button variant="outline-info" onClick={handleClose}>

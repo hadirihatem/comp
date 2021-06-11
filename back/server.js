@@ -2,7 +2,8 @@ const express=require('express')
 const app=express()
 const connectDB=require('./connectDB')
 const cors=require('cors')
-
+const bodyParser=require('body-parser')
+const path = require('path')
 
 
 app.use(cors())
@@ -18,7 +19,10 @@ connectDB();
 
 //middlewares
 app.use(express.json());
-
+app.use(bodyParser.json())
+var pathh = path.resolve(__dirname,'uploads');
+app.use(express.static(pathh));
+app.use(bodyParser.urlencoded({extended:false}))
  //define Routes   
 
  userroutes(app)

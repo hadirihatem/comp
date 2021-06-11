@@ -78,7 +78,7 @@ const Group = () => {
 
           <label style={{ marginRight: 10 }}>poster</label>
 
-          <input type="text" name="poster" onChange={handleChange} />
+          <input type="file" name="poster" accept='.jpg' onChange={handleChange} />
         </Form>
 
         <Button variant="outline-info" onClick={handleClose}>
