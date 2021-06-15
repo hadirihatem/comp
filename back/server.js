@@ -20,8 +20,7 @@ connectDB();
 //middlewares
 app.use(express.json());
 app.use(bodyParser.json())
-var pathh = path.resolve(__dirname,'uploads');
-app.use(express.static(pathh));
+app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use(bodyParser.urlencoded({extended:false}))
  //define Routes   
 

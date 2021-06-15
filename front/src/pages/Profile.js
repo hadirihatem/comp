@@ -20,6 +20,17 @@ const customStyles = {
 
 const Profile = () => {
 
+
+
+  const [file, setFile] = useState();
+
+
+
+
+
+
+
+
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   useEffect(() => {
@@ -37,7 +48,7 @@ const Profile = () => {
   const [NewPost, setNewPost] = useState({
     title: "",
     discription: "",
-    poster: "",
+   
   });
 
   const handleChange = (e) => {
@@ -49,10 +60,14 @@ const Profile = () => {
 
   const handleClose = (e) => {
     e.preventDefault();
-    dispatch(addPost({...NewPost,owner:auth.user._id}));
+    dispatch(addPost({...NewPost,owner:auth.user._id},file));
+
 
     closeModal();
   };
+  const handlefile=(e)=>{
+    setFile(e.target.files[0])
+  }
   useEffect(() => {
     if (auth.user)
     dispatch(getpost())
@@ -79,9 +94,9 @@ const Profile = () => {
           <input type="text" name="discription" onChange={handleChange} />
           <br />
 
-          <label style={{ marginRight: 10 }}>poster</label>
+          <label style={{ marginRight: 10 }}>picture</label>
 
-          <input type="file" name="poster" onChange={handleChange} />
+          <input type="file" name="picture" onChange={handlefile} />
         </Form>
 
         <Button variant="outline-info" onClick={handleClose}>
@@ -142,3 +157,4 @@ hello from profile
   </Modal.Footer>
 </Modal>
       </div> */
+

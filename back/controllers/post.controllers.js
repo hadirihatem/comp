@@ -1,78 +1,30 @@
-const Post = require("../models/Post");
-const User = require("../models/User");
+const PostModel= require("../models/Post");
+
+const UserModel = require("../models/User");
 const { validationResult } = require("express-validator");
 
 
 
-const { uploadErrors } = require("../utils/errors.utils");
-const fs = require("fs");
-const { promisify } = require("util");
-const pipeline = promisify(require("stream").pipeline);
-
-
-
-exports.insert = async (req, res) => {
-  let fileName;
-
-  if (req.file !== null) {
-    try {
-      if (
-        req.file.detectedMimeType != "image/jpg" &&
-        req.file.detectedMimeType != "image/png" &&
-        req.file.detectedMimeType != "image/jpeg"
-      )
-        throw Error("invalid file");
-
-      if (req.file.size > 500000) throw Error("max size");
-    } catch (err) {
-      const errors = uploadErrors(err);
-      return res.status(201).json({ errors });
-    }
-    fileName = req.body.files + Date.now() + ".jpg";
-
-    await pipeline(
-      req.file.stream,
-      fs.createWriteStream(
-        `${__dirname}/../uploads${fileName}`
-      )
-    );
-  }
-
-  const newPost = new Post({
-    title: req.body.title,
-    discription: req.body.discription,
-    files: req.file !== null ? "./uploads" + fileName : "",
-    
-    likes: [],
-    comments: [],
-  });
-
-  try {
-    const post = await newPost.save();
-    return res.status(201).json(post);
-  } catch (err) {
-    return res.status(400).send(err);
-  }
-};
 
 //----------------------------------------------------------
-// exports.insert = (req, res) => {
-//   Post.createPost(req.body).then((result) => {
-//     result != undefined
-//       ? res.status(201).send({
-//           code: 201,
-//           status: "success",
-//           message: "post created successfuly",
-//           data: result,
-//         })
-//       : res.status(400).send({
-//           code: 400,
-//           status: "error",
-//           message: "Invalid post object",
-//         });
+exports.insert = async (req, res) => {
+  PostModel.createPost(req,res).then((result) => {
+
+  //  return result != undefined
+  //     ? res.status(201).json({
+  //         code: 201,
+  //         status: "success",
+  //         message: "post created successfuly",
+  //         data: result,
+  //       })
+  //     : res.status(400).json({
+  //         code: 400,
+  //         status: "error",
+  //         message: "Invalid post object",
+  //       });
     
-//   });
-// };
+  });
+};
 
 
 //------------------getpost-------------
@@ -80,7 +32,7 @@ exports.insert = async (req, res) => {
 
 
 exports.getpost = (req, res) => {
-  Post.findById(req.params.postId)
+  PostModel.findById(req.params.postId)
     .then((result) => {
       res.status(200).json(result);
     })
@@ -92,7 +44,7 @@ exports.getpost = (req, res) => {
 //------------------mypost-----------
 
 exports.getmypost = (req, res) => {
-  User.find({ owner: req.userId })
+  UserModel.find({ owner: req.userId })
     .then((posts) => res.send(posts))
     .catch((err) => {
       console.log(err.message);
@@ -103,7 +55,7 @@ exports.getmypost = (req, res) => {
 //-------------delete---------+
 
 exports.removeById = (req, res) => {
-  Post.removeById(req.params.postId)
+  PostModel.removeById(req.params.postId)
 
     .then(() => {
       res.status(200).send([
@@ -121,7 +73,7 @@ exports.removeById = (req, res) => {
 
 
 exports.putpost = (req, res) => {
-  Post.putPost(req.params.postId, req.body)
+  PostModel.putPost(req.params.postId, req.body)
     .then((result) => {
       res.status(200).send({
         code: 200,
@@ -140,7 +92,7 @@ exports.putpost = (req, res) => {
 exports.putlikepost = (req, res) => {
   async () => {
     try {
-      const post = await Post.findById(req.params.id);
+      const post = await PostModel.findById(req.params.id);
       if (!post) return res.status(404).json("Post not found");
       if (!post.likes.includes(req.body.userId)) {
         await post.updateOne({ $push: { like: req.body.userId } });
@@ -161,7 +113,7 @@ exports.putlikepost = (req, res) => {
 
 exports.mostliked = async (req, res) => {
   try {
-    let posts = await Post.find().sort({ likes: -1 });
+    let posts = await PostModel.find().sort({ likes: -1 });
     res.json(posts);
   } catch (error) {
     console.error(error);
@@ -180,7 +132,7 @@ exports.list = (req, res) => {
       page = Number.isInteger(req.query.page) ? req.query.page : 0;
     }
   }
-  Post.list(page).then((result) => {
+  PostModel.list(page).then((result) => {
     res.status(200).json(result);
   });
 };
@@ -202,8 +154,8 @@ exports.getpostbydate = async (req, res) => {
 
 exports.aadComment = async (req, res) => {
   try {
-    let post = await Post.findById(req.params.post_id);
-    let user = await User.findById(req.user.id).select("-password");
+    let post = await PostModel.findById(req.params.post_id);
+    let user = await UserModel.findById(req.user.id).select("-password");
 
     const { textOfTheComment } = req.body;
     const errors = validationResult(req);
@@ -234,7 +186,7 @@ exports.aadComment = async (req, res) => {
 
 exports.mostcommented = async (req, res) => {
   try {
-    let posts = await Post.find().sort({ comments: -1 });
+    let posts = await PostModel.find().sort({ comments: -1 });
     res.json(posts);
   } catch (error) {
     console.error(error);
@@ -246,7 +198,7 @@ exports.mostcommented = async (req, res) => {
 
 exports.removecomment = async (req, res) => {
   try {
-    let post = await Post.findById(req.params.post_id);
+    let post = await PostModel.findById(req.params.post_id);
 
     if (!post) return res.status(404).json("Post not found");
 
@@ -301,3 +253,34 @@ exports.removecomment = async (req, res) => {
 //   return parseFloat((bytes / Math.pow(1000, index)).toFixed(dm)) + ' ' + sizes[index];
 
 // }
+// module.exports.insert = async (req, res) => {
+//   let fileName;
+
+//   if (req.file !== null) {
+   
+//     fileName = req.body.file + Date.now() + ".jpg";
+
+//     await pipeline(
+//       req.file.stream,
+//       fs.createWriteStream(
+//         `${__dirname}/./uploads/${fileName}`
+//       )
+//     );
+//   }
+
+//   const newPost = new Post({
+//     title: req.body.title,
+//     discription:req.body.discription,
+//     picture: req.file !== null ? "./uploads" + fileName : "",
+//     video: req.body.video,
+//     likers: [],
+//     comments: [],
+//   });
+
+//   try {
+//     const post = await newPost.save();
+//     return res.status(201).json(post);
+//   } catch (err) {
+//     return res.status(400).send(err);
+//   }
+// };

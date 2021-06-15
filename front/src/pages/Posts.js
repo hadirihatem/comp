@@ -3,11 +3,16 @@ import "./Feed.css";
 import "../App.css";
 import Moment from "react-moment";
 import { Spinner } from "react-bootstrap";
+import { ListItem, ListItemText, ListItemAvatar, Avatar, TextField, Button } from '@material-ui/core';
+import SendIcon from '@material-ui/icons/Send';
+
 
 
 const Posts = ({ post }) => {
   const auth = useSelector((state) => state.auth);
 
+
+  const posts = useSelector(state => state.posts)
   // const updateComment = (newComment) => {
   //   setCommentList(commentList.concat(newComment));
   // };
@@ -19,44 +24,40 @@ const Posts = ({ post }) => {
       <Spinner />
     </div>
   ) : (
-    <div className="user-post">
-      <div className="user-post-date">
-        <Moment format="HH:mm YYYY-MM-DD">{post.created_at}</Moment>
-      </div>
-      <div className="user-post-topic">
-      <p className="font__p font__bold">{post.poster}</p>
-    </div>
-      <div className="user-post-topic">
-        <p className="font__p font__bold">{post.title}</p>
-      </div>
-      <div className="user-post-topic">
-        <p className="font__p font__bold">{post.discription}</p>
-      </div>
-     
-      <div className="post__likes__comments__deleteBtn-wrapper">
-        <div className="post__likes__comments__deleteBtn">
-          <div className="user-post-likes">
-            <i className="far fa-thumbs-up"></i> {post.likes.length}
-          </div>
-          <div className="user-post-comments">
-            <i className="far fa-comment"></i>
-            {post.comments.length}
-          </div>
-
-          <div
-            style={{
-              display: post.user === auth.user._id ? "block" : "none",
-            }}
-          >
-            <div className="removePostBtn app_color_background">
-              <i className="fas fa-times"></i>
-            </div>
-          </div>
-
-         
+    <div className="post">
+      
+    <div className="post__header">
+        <ListItem>
+            <ListItemAvatar>
+                <Avatar className="post__avatar" src="" alt="User" />
+            </ListItemAvatar>
+            <ListItemText primary={`${posts.posts.owner.firstname} ${posts.posts.owner.lastname}`} secondary="Abu Dhabi, UAE" />
+        </ListItem>
+        <img
+            className="post__image"
+            src={post.picture}/>
+        <h4 className="post__text"><strong>username: </strong>{post.title}</h4>
+        <div className="post__comments">
+            {/* <Comments /> */}
         </div>
-      </div>
+        <form className="post__form">
+            <TextField
+                label="add comment"
+                size="small"
+                variant="outlined"
+                className="post__input"
+                placeholder="add comment"
+            />
+            <Button
+                variant="contained"
+                size="small"
+                endIcon={<SendIcon />}
+            >
+                Send
+            </Button>
+        </form>
     </div>
+</div>
   );
 };
 

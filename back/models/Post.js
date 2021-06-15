@@ -1,6 +1,6 @@
 const mongoose=require('mongoose');
 const { promisify } = require("util");
-const pipeline = promisify(require("stream").pipeline);
+
 
 
 const Postschema= new mongoose.Schema({
@@ -10,54 +10,62 @@ const Postschema= new mongoose.Schema({
     },
     title:String,
     discription:String,
-    files: String,
+    picture: {
+      type: String,
+    },
     created_at:{
         type:Date,
         default:Date.now
     },
 
-
-    likes: [
-      {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User"
+    likers: {
+      type: [String],
+      required: true,
+    },
+    comments: {
+      type: [
+        {
+          commenterId:String,
+          commenterPseudo: String,
+          text: String,
+          timestamp: Number,
         }
-    ],
-    comments: [
-      {
-        owner: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-       
-        textOfTheComment: {
-          type: String,
-        },
-        date: {
-          type: Date,
-          default: Date.now(),
-        },
-        likes: [
-          {
-            number:{
-              type:Number,
-              default:0
+      ],
+      required: true,
+    },
     
-            },
-            owner: {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: "User",
-            },
-          },
-        ],
-      },
-    ],
-    
-});
-const Post=mongoose.model("Post",Postschema);
- module.export=Post
+},
+{
+  timestamps: true,
+}
+);
+const Post = mongoose.model("Post",Postschema);
+
+
+
 
 //-----------------------------------
+exports.createPost = async (req, res) => {
+  let myBody = JSON.parse(req.body.data)
+  let path = `http://localhost:4000/uploads/${req.file.filename}`;
+
+  const newPost = new Post({
+    title: myBody.title,
+    discription:myBody.discription,
+    picture: path,
+    likers: [],
+    comments: [],
+  });
+
+  try {
+    const post = await newPost.save();
+    return res.status(201).json(post);
+  } catch (err) {
+    console.error(err)
+    return res.status(400).send(err);
+  }
+  
+};
 
 // exports.createPost =async (req,res) => {
   

@@ -47,14 +47,21 @@ export const getpostbydate = () => (dispatch) => {
 
 //-------------------aadpost----------------
 
-export const addPost = (data) => (dispatch) => {
+export const addPost = (data,file) => (dispatch) => {
+  console.log(data,file)
+  // const formData= new FormData();
+  // formData.append('picture',file);
+  // formData.append('data',JSON.stringify(data));
+  let formData = new FormData();
+  formData.append('picture', file);
+  formData.append('data', JSON.stringify(data));
   axios
-    .post("http://localhost:4000/post/create", data)
+    .post("http://localhost:4000/post/create", formData)
     .then((res) => dispatch(getPosts()))
     .catch((err) =>
       dispatch({
         type: ADDPOST_FAIL,
-        payload: err.response.data.msg,
+        payload: err?.response?.data?.msg,
       })
     );
 };

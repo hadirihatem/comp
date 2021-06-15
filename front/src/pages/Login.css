@@ -1,0 +1,156 @@
+.Login-container {
+    margin: 40px auto;
+    width: 500px;
+    box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.2);
+    position: relative;
+    border-radius: 10px;
+    height: 620px;
+    display: grid;
+    grid-template-columns: 1fr ;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 2%;
+    right: 3%;
+    font-size: 1.5rem;
+    z-index: 1;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .Login-content-left {
+    background: linear-gradient(
+      90deg,
+      rgb(39, 176, 255) 0%,
+      rgb(0 236 171) 0% 100%
+    );
+    border-radius: 10px 0 0 10px;
+    position: relative;
+  }
+  
+  .Login-img {
+    width: 80%;
+    height: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .Login-img-2 {
+    width: 60%;
+    height: 60%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .Login-success {
+    text-align: center;
+    font-size: 24px;
+    margin-top: 80px;
+    color: #fff;
+  }
+  
+  .Login-content-right {
+    border-radius: 0 10px 10px 0;
+    position: relative;
+    background: linear-gradient(90deg, rgb(40, 40, 40) 0%, rgb(17, 17, 17) 100%);
+  }
+  
+  .Login {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 97%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .Login h1 {
+    font-size: 2.2rem;
+    text-align: start;
+    width: 80%;
+    margin-bottom: 3rem;
+    color: #fff;
+  }
+  
+  .Login-inputs {
+    margin-bottom: 0.5rem;
+    width: 80%;
+  }
+  
+  .Login-inputs p {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    color: #f00e0e;
+  }
+  
+  .Login-label {
+    display: inline-block;
+    font-size: 1.2rem;
+    margin-bottom: -22px;
+    color: #fff;
+  }
+  
+  .Login-input {
+    display: block;
+    padding-left: 10px;
+    outline: none;
+    border-radius: 2px;
+    height: 40px;
+    width: 100%;
+    border: none;
+  }
+  
+  .Login-input::placeholder {
+    color: #595959;
+    font-size: 12px;
+  }
+  
+  .Login-input-btn {
+    width: 80%;
+    height: 50px;
+    margin-top: 5px;
+    border-radius: 2px;
+    background: linear-gradient(
+      90deg,
+      rgb(39 255 115) 0%,
+      rgb(0, 94, 236) 100%
+    );
+    outline: none;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+  }
+  
+  .Login-input-btn:hover {
+    cursor: pointer;
+    background: linear-gradient(
+      90deg,
+      rgb(39, 143, 255) 0%,
+      rgb(12, 99, 250) 100%
+    );
+    transition: all 0.4s ease-out;
+  }
+  
+  .Login-input-login {
+    font-size: 0.8rem;
+    margin-top: 10px;
+    color: #fff;
+    width: 80%;
+    text-align: center;
+  }
+  
+  .Login-input-login a {
+    text-decoration: none;
+    color: #27cdff;
+    font-weight: 600;
+  }
+ 

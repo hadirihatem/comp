@@ -20,7 +20,14 @@ const customStyles = {
 };
 
 const Group = () => {
+  
+
+  const [file, setFile] = useState();
+
+
+
     const dispatch = useDispatch();
+
   const auth = useSelector((state) => state.auth);
   useEffect(() => {
     if (!auth.user) dispatch(loadUser());
@@ -37,19 +44,23 @@ const Group = () => {
   const [NewPost, setNewPost] = useState({
     title: "",
     discription: "",
-    poster: "",
+    
   });
-
+  const handlefile=(e)=>{
+    setFile(e.target.files[0])
+  }
   const handleChange = (e) => {
     setNewPost({
       ...NewPost,
       [e.target.name]: e.target.value,
     });
   };
+ 
 
   const handleClose = (e) => {
     e.preventDefault();
-    dispatch(addPost({...NewPost,owner:auth.user._id}));
+    dispatch(addPost({...NewPost,owner:auth.user._id},file));
+
 
     closeModal();
   };
@@ -76,9 +87,9 @@ const Group = () => {
           <input type="text" name="discription" onChange={handleChange} />
           <br />
 
-          <label style={{ marginRight: 10 }}>poster</label>
+          <label style={{ marginRight: 10 }}>picture</label>
 
-          <input type="file" name="poster" accept='.jpg' onChange={handleChange} />
+          <input type="file" name="picture"  onChange={handlefile} />
         </Form>
 
         <Button variant="outline-info" onClick={handleClose}>

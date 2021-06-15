@@ -61,8 +61,7 @@ const Navbar = () => {
                     Groupe
                   </Link>
                 </li>
-               
-    
+
                 <li className="nav-Item">
                   <Link
                     className="nav-links"
@@ -95,7 +94,19 @@ const Navbar = () => {
                     Register
                   </Link>
                   {button && (
-                    <Button buttonStyle="btn--outline">Register</Button>
+                    <Button
+                      className="btns"
+                      buttonStyle="btn--outline"
+                      buttonSize="btn--large"
+                    >
+                      <Link
+                        to="/register"
+                        className="get-started"
+                        style={{ textDecoration: "none" }}
+                      >
+                        Register
+                      </Link>
+                    </Button>
                   )}
                 </li>
               </ul>
