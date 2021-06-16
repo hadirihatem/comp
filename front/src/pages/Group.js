@@ -7,6 +7,8 @@ import "../App.css";
 import { loadUser } from "../action/authaction";
 import PostList from "./PostList";
 import {addPost}from "../action/postaction"
+import './Posts.css'
+
 
 const customStyles = {
   content: {

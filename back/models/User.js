@@ -25,6 +25,7 @@ const UserSchema= new mongoose.Schema({
     },
     avatar: {
       type: String,
+      default:'./uplods/random-user.png'
     },
   }
 );

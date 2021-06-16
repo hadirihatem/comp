@@ -2,6 +2,10 @@
 var userscontroller = require("../../controllers/users.controllers");
 var { validation } = require("../../midllwares/validator/validation");
 const { body } = require("express-validator");
+const uploadController = require('../../controllers/upload.controller');
+const multer = require("multer");
+const upload = multer();
+
 // var authmidllwares=require ('../../midllwares/auth/authmidllwares')
 
 const initalizeposteroute = (app) => {
@@ -22,5 +26,7 @@ const initalizeposteroute = (app) => {
     validation,
     userscontroller.login,
   ]);
+
+  app.post("/upload", upload.single("file"), uploadController.uploadProfil);
 };
 module.exports = initalizeposteroute;

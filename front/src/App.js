@@ -9,6 +9,7 @@ import Login from "./pages/Login"
 import Profile from "./pages/Profile"
 import Groupe from './pages/Group'
 import Postnew from "./pages/Postnew";
+import { SliderImg } from './pages/SliderImg';
 
 
 
@@ -19,8 +20,8 @@ function App() {
         <Navbar />
         <switch>
       
-          <Route exact path="/" component={Home} />
-          <Route exact path="/register" component={Register} />
+        <Route exact path="/" render={(props)=><Home {...props} slides={SliderImg}/>}/>
+        <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
           <PrivetRoute exact path="/Profile" component={Profile}/>
           <PrivetRoute exact path="/feed" component={Feed} />

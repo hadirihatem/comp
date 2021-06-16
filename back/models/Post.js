@@ -23,10 +23,13 @@ const Postschema= new mongoose.Schema({
       required: true,
     },
     comments: {
+      owner:{
+        type:mongoose.Types.ObjectId,
+        ref:"User"
+       },
       type: [
         {
           commenterId:String,
-          commenterPseudo: String,
           text: String,
           timestamp: Number,
         }
@@ -55,6 +58,7 @@ exports.createPost = async (req, res) => {
     picture: path,
     likers: [],
     comments: [],
+   owner:myBody.owner
   });
 
   try {

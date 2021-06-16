@@ -1,0 +1,23 @@
+export const SliderImg = [
+    {
+        image:"./images/camp1.jpg"
+    },
+    {
+        image:"./images/camp2.jpg"
+    },
+    {
+        image:"./images/camp3.jpg"
+    },
+    {
+        image:"./images/camp4.jpg"
+    },
+    {
+        image:"./images/camp5.jpg"
+    },
+    {
+        image:"./images/camp6.jpg"
+    },
+    {
+        image:"./images/camp7.jpg"
+    },
+]

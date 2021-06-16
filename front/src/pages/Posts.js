@@ -31,12 +31,13 @@ const Posts = ({ post }) => {
             <ListItemAvatar>
                 <Avatar className="post__avatar" src="" alt="User" />
             </ListItemAvatar>
-            <ListItemText primary={`${posts.posts.owner.firstname} ${posts.posts.owner.lastname}`} secondary="Abu Dhabi, UAE" />
+            <ListItemText primary={`${post.owner.firstname} ${post.owner.lastname}`} secondary="Abu Dhabi, UAE" />
         </ListItem>
         <img
             className="post__image"
             src={post.picture}/>
-        <h4 className="post__text"><strong>username: </strong>{post.title}</h4>
+        <h4 className="post__text"><strong> </strong>{post.title}</h4>
+         <h4 className="post__text"><strong> </strong>{post.discription}</h4>
         <div className="post__comments">
             {/* <Comments /> */}
         </div>

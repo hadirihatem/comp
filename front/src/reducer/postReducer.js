@@ -12,6 +12,7 @@ let initState = {
   post: null,
   isLoading: false,
   errors: {},
+
 };
 
 const PostReducer = (state = initState, action) => {
@@ -24,6 +25,7 @@ const PostReducer = (state = initState, action) => {
         post: action.payload,
         errors: {},
         isLoading: false,
+        
       };
     case GETPOSTS:
     case MOST_LIKED_POST:
@@ -32,6 +34,7 @@ const PostReducer = (state = initState, action) => {
         posts: action.payload,
         errors: {},
         isLoading: false,
+     
       };
 
     case ADDPOST_FAIL:

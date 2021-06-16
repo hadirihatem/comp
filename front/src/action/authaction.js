@@ -6,6 +6,7 @@ import {
   LOAD_USER_SUCCESS,
   LOAD_USER_FAIL,
   LOGOUT,
+ 
 
 } from "./type";
 import axios from "axios";
@@ -32,10 +33,10 @@ export const registerUser = (info) => (dispatch) => {
 
 //load User
 
-export const loadUser = () => (dispatch) => {
+export const loadUser = (id) => (dispatch) => {
   setToken();
   axios
-    .get("http://localhost:4000/users/getuser")
+    .get(`http://localhost:4000/users/${id}`)
     .then((res) =>
       dispatch({
         type: LOAD_USER_SUCCESS,
@@ -75,5 +76,9 @@ export const logoutUser = () => (dispatch) => {
     type: LOGOUT,
   });
 };
+
+
+
+
 
 
